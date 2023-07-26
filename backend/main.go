@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"sastaa-ecommerce-backend/src/database"
+	"sastaa-ecommerce-backend/src/routes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,6 +20,7 @@ func main() {
 	var app *gin.Engine = gin.New()
 
 	app.Use(gin.Logger())
+	routes.AuthRoutes(app)
 
 	app.Run(":" + port)
 }
