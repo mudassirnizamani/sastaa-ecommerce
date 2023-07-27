@@ -5,6 +5,7 @@ import (
 	"sastaa-ecommerce-backend/src/database"
 	"sastaa-ecommerce-backend/src/routes"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,6 +21,12 @@ func main() {
 	var app *gin.Engine = gin.New()
 
 	app.Use(gin.Logger())
+	app.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Access-Control-Allow-Origin"},
+		AllowCredentials: true,
+	}))
 	routes.AuthRoutes(app)
 
 	app.Run(":" + port)

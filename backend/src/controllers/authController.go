@@ -15,19 +15,21 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+var validate *validator.Validate
+
 func Signup() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var signupDto dtos.SignupDto
 
 		if err := c.BindJSON(&signupDto); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"code": "ServerError", "error": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": "ServerError", "error": "error occurred while binding json"})
 			return
 		}
 
-		err := validator.New().Struct(signupDto)
+		err := validate.Struct(signupDto)
 
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"code": "ValidationError", "error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": "ValidationError", "error": "error occurred while validating"})
 			return
 		}
 
@@ -49,7 +51,7 @@ func Signup() gin.HandlerFunc {
 		insertNumber, err := services.CreateUser(signupDto, hashedPassword)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"code": "ServerError", "error": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": "ServerError", "error": "error occurred while inserting user"})
 			return
 		}
 
@@ -66,10 +68,10 @@ func Signin() gin.HandlerFunc {
 			return
 		}
 
-		validationErr := validator.New().Struct(dto)
+		validationErr := validate.Struct(dto)
 
 		if validationErr != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"code": "ValidationError", "error": validationErr.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": "ValidationError", "error": "validation failed"})
 			return
 		}
 

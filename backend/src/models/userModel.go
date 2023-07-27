@@ -9,7 +9,7 @@ type UserModel struct {
 	EmailAddress *string            `json:"email_address" bson:"email_address"`
 	PhoneNumber  *string            `json:"phone_number" bson:"phone_number"`
 	Password     *string            `json:"password" bson:"password"`
-	Token        *string            `json:"tokens" bson:"tokens"`
+	Token        *string            `json:"token" bson:"token"`
 	RefreshToken *string            `json:"refresh_token" bson:"refresh_token"`
 	UserId       string             `json:"user_id" bson:"user_id"`
 }
