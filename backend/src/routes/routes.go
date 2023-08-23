@@ -6,7 +6,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AuthRoutes(app *gin.Engine) {
+func BootstrapRoutes(app *gin.Engine) {
+	authRoutes(app)
+}
+
+func authRoutes(app *gin.Engine) {
+	// Auth Routes
 	app.POST("/signup", controllers.Signup())
 	app.POST("/signin", controllers.Signin())
+	app.POST("/pos/signup", controllers.PosSignup())
+	app.POST("/pos/signin", controllers.PosSignin())
+
 }

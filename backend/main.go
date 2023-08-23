@@ -21,13 +21,16 @@ func main() {
 	var app *gin.Engine = gin.New()
 
 	app.Use(gin.Logger())
+
 	app.Use(cors.New(cors.Config{
 		AllowAllOrigins:  true,
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Access-Control-Allow-Origin"},
 		AllowCredentials: true,
 	}))
-	routes.AuthRoutes(app)
+
+	// Injects Routes in Pipeline
+	routes.BootstrapRoutes(app)
 
 	app.Run(":" + port)
 }

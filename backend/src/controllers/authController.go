@@ -15,8 +15,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-var validate *validator.Validate
-
 func Signup() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var signupDto dtos.SignupDto
@@ -26,7 +24,7 @@ func Signup() gin.HandlerFunc {
 			return
 		}
 
-		err := validate.Struct(signupDto)
+		err := validator.New().Struct(signupDto)
 
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"code": "ValidationError", "error": "error occurred while validating"})
@@ -68,7 +66,7 @@ func Signin() gin.HandlerFunc {
 			return
 		}
 
-		validationErr := validate.Struct(dto)
+		validationErr := validator.New().Struct(dto)
 
 		if validationErr != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"code": "ValidationError", "error": "validation failed"})
@@ -94,14 +92,14 @@ func Signin() gin.HandlerFunc {
 			return
 		}
 
-		token, refreshToken, err := helpers.GenerateTokens(*user.EmailAddress, *user.PhoneNumber)
+		token, refreshToken, err := helpers.GenerateTokens(*user.EmailAddress, *user.PhoneNumber, "")
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"code": "ServerError", "error": " Error occurred while creating token and refresh token"})
 			return
 		}
 
-		services.UpdateTokens(token, refreshToken, user.UserId)
+		services.UpdateTokens(token, refreshToken, user.UserId, database.UsersCollection)
 
 		err = database.UsersCollection.FindOne(ctx, bson.M{"user_id": user.UserId}).Decode(&user)
 

@@ -2,15 +2,15 @@ package services
 
 import (
 	"context"
-	"sastaa-ecommerce-backend/src/database"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func UpdateTokens(token, refreshToken, userId string) {
+func UpdateTokens(token, refreshToken, userId string, collection *mongo.Collection) {
 	var updateObj primitive.D
 
 	updateObj = append(updateObj, bson.E{"token", token})
@@ -29,7 +29,7 @@ func UpdateTokens(token, refreshToken, userId string) {
 	var ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	_, err := database.UsersCollection.UpdateOne(ctx, filter, bson.D{
+	_, err := collection.UpdateOne(ctx, filter, bson.D{
 		{"$set", updateObj},
 	}, &opt)
 

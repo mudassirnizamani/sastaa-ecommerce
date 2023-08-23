@@ -13,15 +13,15 @@ var SECRET_KEY string = os.Getenv("SECRET_KEY")
 type SignedDetails struct {
 	Email       string
 	PhoneNumber string
+	UserName    string
 	jwt.StandardClaims
 }
 
-func GenerateTokens(email, phoneNumber string) (signedToken, signedRefreshToken string, err error) {
-	err = nil
-
+func GenerateTokens(email, phoneNumber, userName string) (signedToken, signedRefreshToken string, err error) {
 	claims := &SignedDetails{
 		Email:       email,
 		PhoneNumber: phoneNumber,
+		UserName:    userName,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(1)).Unix(),
 		},
@@ -47,7 +47,7 @@ func GenerateTokens(email, phoneNumber string) (signedToken, signedRefreshToken 
 		return
 	}
 
-	return token, refreshToken, err
+	return token, refreshToken, nil
 }
 
 // This is function will validate the Token, and it is used in the Authenticate Middleware

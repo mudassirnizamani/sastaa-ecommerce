@@ -41,3 +41,4 @@ func openCollection(dbClient *mongo.Client, collectionName string) *mongo.Collec
 }
 
 var UsersCollection *mongo.Collection = openCollection(mongoClient, "users")
+var PosUsersCollection *mongo.Collection = openCollection(mongoClient, "pos-users")
